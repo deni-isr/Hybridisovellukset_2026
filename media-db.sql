@@ -106,12 +106,11 @@ START TRANSACTION;
 INSERT INTO orders (customer_id, total, status, delivery_address) 
 VALUES (1, 25.00, 'pending', 'Keskuskatu 10');
 
--- Lisätään tilauksen tuotteet (order_items käyttää LAST_INSERT_ID)
 -- Jos tämä epäonnistuu, koko tilaus perutaan automaattisesti.
 INSERT INTO order_items (order_id, product_id, quantity) 
 VALUES (LAST_INSERT_ID(), 1, 2);
 
-COMMIT; -- Nyt kaikki tallentuu kerralla.
+COMMIT;
 
 
 -- CASCADE DELETE
@@ -119,12 +118,6 @@ COMMIT; -- Nyt kaikki tallentuu kerralla.
 
 -- Esimerkki: Poistetaan Margherita-pitsa valikoimasta
 DELETE FROM products WHERE id = 1;
-
--- Selitys suomeksi:
--- Koska käytimme "ON DELETE CASCADE", tämä tuote poistuu 
--- automaattisesti myös lunch_menus ja order_items tauluista.
--- Sinun ei tarvitse poistaa niitä käsin.
-
 
 -- VIEWS
 -- Idea: Tehdään valmis "ikkuna", josta on helppo katsoa tietoja.
@@ -150,5 +143,3 @@ CREATE INDEX idx_user_email ON users(email);
 
 -- Nopeutetaan hakuja päivämäärän mukaan
 CREATE INDEX idx_menu_date ON lunch_menus(date);
-
--- Miksi: Jos taulussa on 10 000 riviä, haku on heti paljon nopeampi.
